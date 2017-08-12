@@ -16,7 +16,7 @@ yellow='\e[1;33m'
 default='\e[1;0m'
 
 # variabel 
-version="4.0"
+version="5.0"
 ok="[\e[1;32m ok $default]"
 fail="[\e[1;31mfail$default]"
 bs="1024000"
@@ -63,7 +63,6 @@ sleep 1
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green installed with $swap_sizee MB!!!$default"
-sleep 1
 echo " "
 }
 
@@ -98,7 +97,6 @@ sleep 1
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green installed!!!$default"
-sleep 1
 echo " "
 elif [ 0$size = 02 ]; then
 echo -n "Installing swap "
@@ -120,7 +118,6 @@ sleep 1
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green installed!!!$default"
-sleep 1
 echo " "
 elif [ 0$size = 03 ]; then
 echo -n "Installing swap "
@@ -142,7 +139,6 @@ sleep 1
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green installed!!!$default"
-sleep 1
 echo " "
 elif [ 0$size = 04 ]; then
 echo -n "Installing swap "
@@ -164,7 +160,6 @@ sleep 1
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green installed!!!$default"
-sleep 1
 echo " "
 elif [ 0$size = 0c ]; then
 swap_c
@@ -174,6 +169,7 @@ fi
 }
 
 swap_a(){
+if [ -f $(for i in /data/swap.img; do [ -f ] && echo $i && break; done) ]; then
 echo -n "Activating swap "
 sleep 1
 echo "$ok"
@@ -182,21 +178,49 @@ mkswap /data/swap.img
 swapon /data/swap.img
 sleep 1
 echo -n "Swap has been$green actived!!!$default"
-sleep 1
 echo " "
+else
+echo "Swap not installed !!!"
+sleep 1
+echo "\e[1;31mExiting swapcli...$default"
+fi
+}
+
+swap_b(){
+if [ -f $(for i in /data/swap.img; do [ -f ] && echo $i && break; done) ]; then
+echo "Adding swap on boot"
+echo "Mounting system..."
+sleep 1
+mount -o remount,rw /system
+echo "Writing file into init.d services..."
+sleep 1
+echo "# Swap On Boot by Swap-CLI #\n\nmkswap /data/swap.img\nswapon /data/swap.img" > /system/etc/init.d/swap_on_boot
+chmod 777 /system/etc/init.d/swap_on_boot
+echo "File writed on init.d folder ! $ok"
+else
+echo "Swap not installed !!!"
+sleep 1
+echo "\e[1;31mExiting swapcli...$default"
+fi
 }
 
 swap_u(){
+if [ -f $(for i in /data/swap.img; do [ -f ] && echo $i && break; done) ]; then
 echo -n "Uninstalling swap "
 swapoff /data/swap.img
 echo "$ok"
 sleep 1
 echo -n "Swap has been$green uninstalled!!!$default"
-sleep 1
 echo " "
+else
+echo "Swap not installed !!!"
+sleep 1
+echo "\e[1;31mExiting swapcli...$default"
+fi
 }
 
 swap_r(){
+if [ -f $(for i in /data/swap.img; do [ -f ] && echo $i && break; done) ]; then
 echo -n "Uninstalling swap "
 swapoff /data/swap.img
 echo "$ok"
@@ -207,8 +231,12 @@ sleep 1
 echo "$ok"
 sleep 1
 echo -n "Swap has been$green Removed!!!$default"
-sleep 1
 echo " "
+else
+echo "Swap not installed !!!"
+sleep 1
+echo "\e[1;31mExiting swapcli...$default"
+fi
 }
 
 buka(){
@@ -216,6 +244,7 @@ clear
 banner
 echo " [i] Install swap"
 echo " [a] Active swap"
+echo " [b] Set on boot [swap]"
 echo " [u] Uninstall swap"
 echo " [r] Remove swap [remove swap.img file]"
 echo " "
@@ -225,6 +254,8 @@ if [ 0$swap = 0i ]; then
 swap_size
 elif [ 0$swap = 0a ]; then
 swap_a
+elif [ 0$swap = 0b ]; then
+swap_b
 elif [ 0$swap = 0u ]; then
 swap_u
 elif [ 0$swap = 0r ]; then

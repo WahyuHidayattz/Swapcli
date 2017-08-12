@@ -34,7 +34,7 @@ root@android:~# sh swapcli.sh
 
 __B. Automatic by flashing swap-cli into recovery.__
 
-- Download file `swapcli 4.0.zip` on link : <http://kuya/swapcli.zip>
+- Download file `swapcli 5.0.zip` on link : <https://drive.google.com/file/d/0B5SpWSpauPDuNy1CQkc2Ml9iZjA/view?usp=drivesdk>
 
 - Flash into custom recovery
 
@@ -58,6 +58,14 @@ root@android:~# swapcli
 ----
 
 __Changelog :__
+
+__swap-cli 5.0__
+
+```
+[+] Add set swap on boot
+[+] Fixing some minor bug
+[+] Fixing uninstall swap
+```
 
 __swap-cli 4.0__
 
